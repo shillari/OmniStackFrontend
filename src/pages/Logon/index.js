@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 // Dentro dele tem vários site de ícones que podem ser utilizados na aplicação.
 // Escolhemos o Feather Icons (FI)
 import { FiLogIn } from 'react-icons/fi'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import api from '../../services/api'
 
 import './styles.css'
@@ -14,15 +14,19 @@ import hearoesImg from '../../assets/heroes.png'
 export default function Logon() {
 
     const [id, setId] = useState('');
+    const history = useHistory();
 
     async function handleLogin(e) {
 
-        e.proventDefault();
+        e.preventDefault();
 
         try {
             const response = await api.post('login', { id });
 
-            console.log(response.data.name)
+            localStorage.setItem('ongId', id)
+            localStorage.setItem('ongName', response.data.name)
+
+            history.push('/profile')
         } catch (err) {
             alert('Falha no login, tente novamente.')
         }
